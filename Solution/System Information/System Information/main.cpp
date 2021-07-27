@@ -20,13 +20,13 @@ int main( )
 		//Timestamp + Memory Info, and eventually CPU Load percentage
 
 		Sonar::SystemInformation info = s.GetSystemInformation( );
-
+		
 		std::cout
 			<< info._timestamp._hour << ":"
 			<< info._timestamp._minutes << ":"
 			<< info._timestamp._seconds << ":"
 			<< info._timestamp._milliseconds << " - "
-			<< info._cpuLoad << "%" << std::endl;
+			<< info._physicalTotalMemory << std::endl;
 
 		//250 millisecond sleep delay 
 		Sleep( 100 );

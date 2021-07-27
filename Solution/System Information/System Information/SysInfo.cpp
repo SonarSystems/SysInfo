@@ -2,65 +2,75 @@
 
 namespace Sonar
 {
-	SysInfo::SysInfo( )
+
+	SysInfo::SysInfo( const MemoryFormat &memoryFormat )
 	{
-		//Code block initialization for the memory referenced in the Kernel
-		
-		//memStat.dwLength = sizeof( memStat );
-		//GlobalMemoryStatusEx( &memStat );
+		switch ( memoryFormat )
+		{
+			case MemoryFormat::Bits:
+				_memoryFormatMultiplier = 8.0f;
 
-		//
-		////Retrieves data so that we have a way to Get it to output when using the pointers
-		//GetSystemTime( &sysTime );
-	}
+				break;
 
-	SysInfo::~SysInfo( )
-	{
+			case MemoryFormat::Bytes:
+				_memoryFormatMultiplier = 1.0f;
 
+				break;
+
+			case MemoryFormat::Kilobytes:
+				_memoryFormatMultiplier = MEMORY_MULTIPLIER;
+
+				break;
+
+			case MemoryFormat::Megabytes:
+				_memoryFormatMultiplier =  pow( MEMORY_MULTIPLIER, 2.0f );
+
+				break;
+
+				/*
+				* NOT NEEDED BUT LEFT INCASE DEFAULT VALUE CHANGED IN HEADER
+			case MemoryFormat::Gigabytes:
+				_memoryFormatMultiplier = 1024.0f * 1024.0f * 1024.0f;
+
+				break;
+				*/
+		}
 	}
 
 	const Sonar::SystemInformation &SysInfo::GetSystemInformation( )
 	{
 		SYSTEMTIME sysTime;
-
 		MEMORYSTATUSEX memStat;
 
-		SystemInformation systemInformation;
-
 		memStat.dwLength = sizeof( memStat );
+
 		GlobalMemoryStatusEx( &memStat );
-
 		GetSystemTime( &sysTime );
-		
-		systemInformation._timestamp._hour = sysTime.wHour;
-		systemInformation._timestamp._minutes = sysTime.wMinute;
-		systemInformation._timestamp._seconds = sysTime.wSecond;
-		systemInformation._timestamp._milliseconds = sysTime.wMilliseconds;
-		systemInformation._cpuLoad = GetCPULoad( ) * 100.0f;
-		systemInformation._memoryLoad = memStat.dwMemoryLoad;
-		systemInformation._physicalAvailableMemory = memStat.ullTotalPhys;
-		systemInformation._physicalTotalMemory = memStat.ullAvailPhys;
-		systemInformation._pageFileAvailableMemory = memStat.ullTotalPageFile;
-		systemInformation._pageFileTotalMemory = memStat.ullAvailPageFile;
-		systemInformation._virtualAvailableMemory = memStat.ullTotalVirtual;
-		systemInformation._virtualTotalMemory = memStat.ullAvailVirtual;
-		systemInformation._virtualExtendedAvailableMemory = memStat.ullAvailExtendedVirtual;
 
-		return systemInformation;
+		// Timestamp
+		_systemInformation._timestamp._hour = sysTime.wHour;
+		_systemInformation._timestamp._minutes = sysTime.wMinute;
+		_systemInformation._timestamp._seconds = sysTime.wSecond;
+		_systemInformation._timestamp._milliseconds = sysTime.wMilliseconds;
+		_systemInformation._timestamp._day = sysTime.wDay;
+		_systemInformation._timestamp._month = sysTime.wMonth;
+		_systemInformation._timestamp._year = sysTime.wYear;
+		_systemInformation._timestamp._dayOfTheWeek = sysTime.wDayOfWeek;
 
-		/*std::cout <<
-			sysTime.wHour << "." <<
-			sysTime.wMinute << "." <<
-			sysTime.wSecond << ", " << */
-			//GetCPULoad( ) * 100 << "%, " << 
-			//memStat.dwMemoryLoad << "%, " << 
-			//memStat.ullTotalPhys / MB << ", " << 
-			//memStat.ullAvailPhys / MB << ", " << 
-			//memStat.ullTotalPageFile / MB << ", " << 
-			//memStat.ullAvailPageFile / MB << ", " << 
-			//memStat.ullTotalVirtual / MB << ", " << 
-			//memStat.ullAvailVirtual / MB << ", " << 
-			//memStat.ullAvailExtendedVirtual / MB << "\n";
+		// Load (in percentage)
+		_systemInformation._cpuLoad = GetCPULoad( ) * 100.0f;
+		_systemInformation._memoryLoad = memStat.dwMemoryLoad;
+
+		// Memory stats
+		_systemInformation._physicalAvailableMemory = memStat.ullAvailPhys / _memoryFormatMultiplier;
+		_systemInformation._physicalTotalMemory = memStat.ullTotalPhys / _memoryFormatMultiplier;
+		_systemInformation._pageFileAvailableMemory = memStat.ullAvailPageFile /  _memoryFormatMultiplier;
+		_systemInformation._pageFileTotalMemory = memStat.ullTotalPageFile / _memoryFormatMultiplier;
+		_systemInformation._virtualAvailableMemory = memStat.ullAvailVirtual / _memoryFormatMultiplier;
+		_systemInformation._virtualTotalMemory = memStat.ullTotalVirtual / _memoryFormatMultiplier;
+		_systemInformation._virtualExtendedAvailableMemory = memStat.ullAvailExtendedVirtual / _memoryFormatMultiplier;
+
+		return _systemInformation;
 	}
 
 	float SysInfo::CalculateCPULoad( unsigned long long idleTicks, unsigned long long totalTicks )
@@ -71,18 +81,16 @@ namespace Sonar
 		unsigned long long totalTicksSinceLastTime = totalTicks - _previousTotalTicks;
 		unsigned long long idleTicksSinceLastTime = idleTicks - _previousIdleTicks;
 
-
 		float ret = 1.0f - ( ( totalTicksSinceLastTime > 0 ) ? ( ( float )idleTicksSinceLastTime ) / totalTicksSinceLastTime : 0 );
 
 		_previousTotalTicks = totalTicks;
 		_previousIdleTicks = idleTicks;
+
 		return ret;
 	}
 
 	unsigned long long SysInfo::FileTimeToInt64( const FILETIME &ft )
-	{
-		return ( ( ( unsigned long long )( ft.dwHighDateTime ) ) << 32 ) | ( ( unsigned long long )ft.dwLowDateTime );
-	}
+	{ return ( ( ( unsigned long long )( ft.dwHighDateTime ) ) << 32 ) | ( ( unsigned long long )ft.dwLowDateTime ); }
 
 	// Returns 1.0f for "CPU fully pinned", 0.0f for "CPU idle", or somewhere in between
 	// You'll need to call this at regular intervals, since it measures the load between
@@ -90,6 +98,7 @@ namespace Sonar
 	float SysInfo::GetCPULoad( )
 	{
 		FILETIME idleTime, kernelTime, userTime;
+
 		return GetSystemTimes( &idleTime, &kernelTime, &userTime ) ? CalculateCPULoad( FileTimeToInt64( idleTime ), FileTimeToInt64( kernelTime ) + FileTimeToInt64( userTime ) ) : -1.0f;
 	}
 }
