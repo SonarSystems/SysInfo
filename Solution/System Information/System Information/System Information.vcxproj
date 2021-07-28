@@ -139,11 +139,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SysInfo.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\cpuinfo.cpp" />
+    <ClCompile Include="src\cpuinfodelegate.cpp" />
+    <ClCompile Include="src\gpuinfo.cpp" />
+    <ClCompile Include="src\gpuinfodelegate.cpp" />
+    <ClCompile Include="src\motherboardinfo.cpp" />
+    <ClCompile Include="src\motherboardinfodelegate.cpp" />
+    <ClCompile Include="src\osinfo.cpp" />
+    <ClCompile Include="src\osinfodelegate.cpp" />
+    <ClCompile Include="src\raminfo.cpp" />
+    <ClCompile Include="src\raminfodelegate.cpp" />
+    <ClCompile Include="src\SysInfo.cpp" />
+    <ClCompile Include="src\systemcommand.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SysInfo.hpp" />
+    <ClInclude Include="include\cpuinfo.h" />
+    <ClInclude Include="include\cpuinfodelegate.h" />
+    <ClInclude Include="include\gpuinfo.h" />
+    <ClInclude Include="include\gpuinfodelegate.h" />
+    <ClInclude Include="include\motherboardinfo.h" />
+    <ClInclude Include="include\motherboardinfodelegate.h" />
+    <ClInclude Include="include\osinfo.h" />
+    <ClInclude Include="include\osinfodelegate.h" />
+    <ClInclude Include="include\raminfo.h" />
+    <ClInclude Include="include\raminfodelegate.h" />
+    <ClInclude Include="include\SysInfo.hpp" />
+    <ClInclude Include="include\systemcommand.h" />
+    <ClInclude Include="include\systeminfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

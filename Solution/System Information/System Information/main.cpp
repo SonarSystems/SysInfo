@@ -1,4 +1,4 @@
-#include "SysInfo.hpp"
+#include "include/SysInfo.hpp"
 
 //main program code loop
 int main( )
