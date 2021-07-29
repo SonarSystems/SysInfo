@@ -1,4 +1,15 @@
 ﻿  main.cpp
+  cpuinfo.cpp
+  cpuinfodelegate.cpp
+  gpuinfo.cpp
+  gpuinfodelegate.cpp
+  motherboardinfo.cpp
+  motherboardinfodelegate.cpp
+  osinfo.cpp
+  osinfodelegate.cpp
+  raminfo.cpp
+  raminfodelegate.cpp
   SysInfo.cpp
+  systemcommand.cpp
   Generating Code...
   System Information.vcxproj -> E:\GitHub\SysInfo\Solution\System Information\Debug\System Information.exe

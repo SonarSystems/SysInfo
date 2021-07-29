@@ -85,7 +85,7 @@ namespace Sonar
 		std::vector<CPUInfo> cpuInfoVector{ cpuInfo->cpuInfoVector( ) };
 
 		//Print out the number of CPUs, directory from the delegate object
-		_systemInformation._numberofPhysicalCPUs = cpuInfo->numberOfCPUInfoItems( );
+		_systemInformation._numberOfPhysicalCPUs = cpuInfo->numberOfCPUInfoItems( );
 
 		for ( std::vector<CPUInfo>::const_iterator iter = cpuInfoVector.begin( ); iter != cpuInfoVector.end( ); iter++ )
 		{
@@ -106,80 +106,94 @@ namespace Sonar
 
 		std::unique_ptr<MotherboardInfoDelegate> moboInfo = std::make_unique<MotherboardInfoDelegate>( );
 		std::vector<MotherboardInfo> moboInfoVector = moboInfo->motherboardInfoVector( );
-		std::cout << "This computer has " << moboInfo->numberOfMotherboardInfoItems( ) << " motherboard(s) installed" << std::endl;
+		_systemInformation._numberOfPhysicalMotherboards = moboInfo->numberOfMotherboardInfoItems( );
 
 		for ( std::vector<MotherboardInfo>::const_iterator iter = moboInfoVector.begin( ); iter != moboInfoVector.end( ); iter++ )
 		{
-			std::cout << "Information for motherboard #" << iter->motherboardNumber( ) + 1 << ": " << std::endl;
-			std::cout << "Motherboard Name = " << iter->name( ) << std::endl;
-			std::cout << "Motherboard Manufacturer = " << iter->manufacturer( ) << std::endl;
-			std::cout << "Motherboard Chipset = " << iter->chipset( ) << std::endl;
-			std::cout << "Motherboard Serial Number = " << iter->serialNumber( ) << std::endl;
-			std::cout << "Motherboard Version = " << iter->version( ) << std::endl;
-			std::cout << std::endl;
+			Motherboard motherboard;
+
+			motherboard._motherboardNumber = iter->motherboardNumber( ) + 1;
+			motherboard._name = iter->name( );
+			motherboard._manufacturer = iter->manufacturer( );
+			motherboard._chipset = iter->chipset( );
+			motherboard._serialNumber = iter->serialNumber( );
+			motherboard._version = iter->version( );
+
+			_systemInformation._motherboards.push_back( motherboard );
 		}
 
 		std::unique_ptr<RAMInfoDelegate> ramInfo = std::make_unique<RAMInfoDelegate>( );
 		std::vector<RAMInfo> ramInfoVector = ramInfo->ramInfoVector( );
-		std::cout << "This computer has " << ramInfo->numberOfRAMInfoItems( ) << " RAM stick(s) installed" << std::endl;
+		_systemInformation._numberOfPhysicalRAMSticks = ramInfo->numberOfRAMInfoItems( );
 
 		for ( std::vector<RAMInfo>::const_iterator iter = ramInfoVector.begin( ); iter != ramInfoVector.end( ); iter++ )
 		{
-			std::cout << "Information for RAM stick #" << iter->ramNumber( ) + 1 << ": " << std::endl;
-			std::cout << "RAM Name = " << iter->name( ) << std::endl;
-			std::cout << "RAM Manufacturer = " << iter->manufacturer( ) << std::endl;
-			std::cout << "RAM Capacity = " << iter->capacity( ) << std::endl;
-			std::cout << "RAM Serial Number = " << iter->serialNumber( ) << std::endl;
-			std::cout << "RAM Form Factor = " << iter->formFactor( ) << std::endl;
-			std::cout << "RAM Part Number = " << iter->partNumber( ) << std::endl;
-			std::cout << "RAM Memory Type = " << iter->memoryType( ) << std::endl;
-			std::cout << "RAM Clock Speed = " << iter->clockSpeed( ) << std::endl;
-			std::cout << std::endl;
+			RAM ram;
+
+			ram._ramNumber = iter->ramNumber( ) + 1;
+			ram._name = iter->name( );
+			ram._manufacturer = iter->manufacturer( );
+			ram._capacity = iter->capacity( );
+			ram._serialNumber = iter->serialNumber( );
+			ram._formFactor = iter->formFactor( );
+			ram._partNumber = iter->partNumber( );
+			ram._memoryType = iter->memoryType( );
+			ram._clockSpeed = iter->clockSpeed( );
+			
+			_systemInformation._ramSticks.push_back( ram );
 		}
 
 		std::unique_ptr<GPUInfoDelegate> gpuInfo = std::make_unique<GPUInfoDelegate>( );
 		std::vector<GPUInfo> gpuInfoVector = gpuInfo->gpuInfoVector( );
-		std::cout << "This computer has " << gpuInfo->numberOfGPUInfoItems( ) << " GPU(s) installed" << std::endl;
+		_systemInformation._numberOfPhysicalGPUs = gpuInfo->numberOfGPUInfoItems( );
+		
 		for ( std::vector<GPUInfo>::const_iterator iter = gpuInfoVector.begin( ); iter != gpuInfoVector.end( ); iter++ )
 		{
-			std::cout << "Information for GPU #" << iter->gpuNumber( ) + 1 << ": " << std::endl;
-			std::cout << "GPU Name = " << iter->name( ) << std::endl;
-			std::cout << "GPU Manufacturer = " << iter->manufacturer( ) << std::endl;
-			std::cout << "GPU Caption = " << iter->caption( ) << std::endl;
-			std::cout << "GPU Adapter RAM = " << iter->adapterRAM( ) << std::endl;
-			std::cout << "GPU Refresh Rate = " << iter->refreshRate( ) << std::endl;
-			std::cout << "GPU Driver Version = " << iter->driverVersion( ) << std::endl;
-			std::cout << "GPU Video Architecture = " << iter->videoArchitecture( ) << std::endl;
-			std::cout << "GPU Video Mode Description = " << iter->videoModeDescription( ) << std::endl;
-			std::cout << "GPU Video Processor = " << iter->videoProcessor( ) << std::endl;
-			std::cout << std::endl;
+			GPU gpu;
+
+			gpu._gpuNumber = iter->gpuNumber( ) + 1;
+			gpu._name = iter->name( );
+			gpu._manufacturer = iter->manufacturer( );
+			gpu._caption = iter->caption( );
+			gpu._ram = iter->adapterRAM( );
+			gpu._refreshRate = iter->refreshRate( );
+			gpu._driverVersion = iter->driverVersion( );
+			gpu._videoArchitecture = iter->videoArchitecture( );
+			gpu._videoModeDescription = iter->videoModeDescription( );
+			gpu._videoProcessor = iter->videoProcessor( );
+			
+			_systemInformation._gpus.push_back( gpu );
 		}
 
 		std::unique_ptr<OSInfoDelegate> osInfo = std::make_unique<OSInfoDelegate>( );
 		std::vector<OSInfo> osInfoVector = osInfo->osInfoVector( );
-		std::cout << "This computer has " << osInfo->numberOfOSInfoItems( ) << " OS(s) installed" << std::endl;
+		_systemInformation._numberOfOSs = osInfo->numberOfOSInfoItems( );
+
 		for ( std::vector<OSInfo>::const_iterator iter = osInfoVector.begin( ); iter != osInfoVector.end( ); iter++ )
 		{
-			std::cout << "Information for OS #" << iter->osNumber( ) + 1 << ": " << std::endl;
-			std::cout << "OS Name = " << iter->name( ) << std::endl;
-			std::cout << "OS Manufacturer = " << iter->manufacturer( ) << std::endl;
-			std::cout << "OS Caption = " << iter->caption( ) << std::endl;
-			std::cout << "OS Version = " << iter->version( ) << std::endl;
-			std::cout << "Current User = " << iter->currentUser( ) << std::endl;
-			std::cout << "Install Date = " << iter->installDate( ) << std::endl;
-			std::cout << "Build Number = " << iter->buildNumber( ) << std::endl;
-			std::cout << "Last Boot Up Time = " << iter->lastBootUpTime( ) << std::endl;
-			std::cout << "Boot Device = " << iter->bootDevice( ) << std::endl;
-			std::cout << "Total Virtual Memory = " << iter->totalVirtualMemory( ) << std::endl;
-			std::cout << "Total Visible Memory = " << iter->totalVisibleMemory( ) << std::endl;
-			std::cout << "Total Swap Size = " << iter->totalSwapSize( ) << std::endl;
-			std::cout << "Serial Number = " << iter->serialNumber( ) << std::endl;
-			std::cout << "Free Physical Memory = " << iter->freePhysicalMemory( ) << std::endl;
-			std::cout << "Free Virtual Memory = " << iter->freeVirtualMemory( ) << std::endl;
-			std::cout << "Free Paging File Space = " << iter->freePagingFileSpace( ) << std::endl;
-			std::cout << "Used Paging File Space = " << iter->usedPagingFileSpace( ) << std::endl;
-			std::cout << "Current Date Time = " << iter->currentDateTime( ) << std::endl;
-			std::cout << std::endl;
+			OS os;
+
+			os._osNumber = iter->osNumber( ) + 1;
+			os._name = iter->name( );
+			os._manufacturer = iter->manufacturer( );
+			os._caption = iter->caption( );
+			os._version = iter->version( );
+			os._currentDateTime = iter->currentUser( );
+			os._installDate = iter->installDate( );
+			os._buildNumber = iter->buildNumber( );
+			os._lastBootUpTime = iter->lastBootUpTime( );
+			os._bootDevice = iter->bootDevice( );
+			os._totalVirtualMemory = iter->totalVirtualMemory( );
+			os._totalVisibleMemory = iter->totalVisibleMemory( );
+			os._totalSwapSize = iter->totalSwapSize( );
+			os._serialNumber = iter->serialNumber( );
+			os._freePhysicalMemory = iter->freePhysicalMemory( );
+			os._freeVirtualMemory = iter->freeVirtualMemory( );
+			os._freePagingFileSpace = iter->freePagingFileSpace( );
+			os._usingPagingFileSpace = iter->usedPagingFileSpace( );
+			os._currentDateTime = iter->currentDateTime( );
+			
+			_systemInformation._oss.push_back( os );
 		}
 	}
 

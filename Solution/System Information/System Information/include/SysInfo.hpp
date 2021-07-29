@@ -27,7 +27,7 @@ namespace Sonar
 	/**
 	* \brief Memory format
 	*/
-	enum MemoryFormat { Bits, Bytes, Kilobytes, Megabytes, Gigabytes };
+	enum class MemoryFormat { Bits, Bytes, Kilobytes, Megabytes, Gigabytes };
 
 	/**
 	* \brief Timestamp
@@ -49,7 +49,7 @@ namespace Sonar
 	*/
 	struct CPU
 	{
-		int _cpuNumber = 0; // Which physical CPU it is (starts at 1)
+		int _cpuNumber = 1; // Which physical CPU it is (starts at 1)
 		std::string _name;
 		std::string _manufacturer;
 		std::string _coreCount;
@@ -61,11 +61,84 @@ namespace Sonar
 	};
 
 	/**
+	* \brief Motherboard stats
+	*/
+	struct Motherboard
+	{
+		int _motherboardNumber = 1; // Which physical MOBO it is (starts at 1)
+		std::string _name;
+		std::string _manufacturer;
+		std::string _chipset;
+		std::string _serialNumber;
+		std::string _version;
+	};
+
+	/**
+	* \brief RAM stats
+	*/
+	struct RAM
+	{
+		int _ramNumber = 1; // Which physical RAM stick it is (starts at 1)
+		std::string _name;
+		std::string _manufacturer;
+		std::string _capacity;
+		std::string _serialNumber;
+		std::string _formFactor;
+		std::string _partNumber;
+		std::string _memoryType;
+		std::string _clockSpeed;
+	};
+
+	/**
+	* \brief GPU stats
+	*/
+	struct GPU
+	{
+		int _gpuNumber = 1; // Which physical GPU it is (starts at 1)
+		std::string _name;
+		std::string _manufacturer;
+		std::string _caption;
+		std::string _ram;
+		std::string _refreshRate;
+		std::string _driverVersion;
+		std::string _videoArchitecture;
+		std::string _videoModeDescription;
+		std::string _videoProcessor;
+	};
+
+	/**
+	* \brief OS stats
+	*/
+	struct OS
+	{
+		int _osNumber = 1; // Which OS it is (starts at 1)
+		std::string _name;
+		std::string _manufacturer;
+		std::string _caption;
+		std::string _version;
+		std::string _currentUser;
+		std::string _installDate;
+		std::string _buildNumber;
+		std::string _lastBootUpTime;
+		std::string _bootDevice;
+		std::string _totalVirtualMemory;
+		std::string _totalVisibleMemory;
+		std::string _totalSwapSize;
+		std::string _serialNumber;
+		std::string _freePhysicalMemory;
+		std::string _freeVirtualMemory;
+		std::string _freePagingFileSpace;
+		std::string _usingPagingFileSpace;
+		std::string _currentDateTime;
+	};
+
+	/**
 	* \brief System information (all memory is in Bytes)
 	*/
 	struct SystemInformation
 	{
 		Timestamp _timestamp;
+
 		float _cpuLoad;
 		unsigned long _memoryLoad;
 		float _physicalTotalMemory;
@@ -76,8 +149,20 @@ namespace Sonar
 		float _virtualAvailableMemory;
 		float _virtualExtendedAvailableMemory;
 
-		int _numberofPhysicalCPUs;
+		int _numberOfPhysicalCPUs;
 		std::vector<CPU> _cpus; // Will most likely only be one for most systems
+
+		int _numberOfPhysicalMotherboards;
+		std::vector<Motherboard> _motherboards; // Will most likely only be one for most systems
+
+		int _numberOfPhysicalRAMSticks;
+		std::vector<RAM> _ramSticks;
+
+		int _numberOfPhysicalGPUs;
+		std::vector<GPU> _gpus;
+
+		int _numberOfOSs;
+		std::vector<OS> _oss; // Will most likely only be one for most systems
 	};
 
 	class SysInfo
