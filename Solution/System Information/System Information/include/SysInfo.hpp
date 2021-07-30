@@ -172,9 +172,9 @@ namespace Sonar
 		* \brief Constructor
 		* 
 		* \param memoryFormat Memory units to store memory stats in
-		* \param loadSystemInfo Should the system info be loaded at the start (can be a bit slow so false by default)
+		* \param loadSystemInfo Should the system info be loaded at the start (can be abit slow so can be disabled, recommend loading during a loading screen)
 		*/
-		SysInfo( const MemoryFormat &memoryFormat = MemoryFormat::Gigabytes, const bool loadSystemInfo = false );
+		SysInfo( const MemoryFormat &memoryFormat = MemoryFormat::Gigabytes, const bool loadSystemInfo = true );
 
 		/**
 		* \brief Default destructor

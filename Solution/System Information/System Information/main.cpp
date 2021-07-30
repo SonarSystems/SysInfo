@@ -21,12 +21,22 @@ int main( )
 
 		Sonar::SystemInformation info = s.GetSystemInformation( );
 		
+
 		std::cout
 			<< info._timestamp._hour << ":"
 			<< info._timestamp._minutes << ":"
 			<< info._timestamp._seconds << ":"
 			<< info._timestamp._milliseconds << " - "
-			<< info._physicalTotalMemory << std::endl;
+			<< info._gpus.front( )._name << " - "
+			<< info._gpus.front( )._manufacturer << " - "
+			<< info._gpus.front( )._caption << " - "
+			<< info._gpus.front( )._ram << " - "
+			<< info._gpus.front( )._refreshRate << " - "
+			<< info._gpus.front( )._driverVersion << " - "
+			<< info._gpus.front( )._videoArchitecture << " - "
+			<< info._gpus.front( )._videoModeDescription << " - "
+			<< info._gpus.front( )._videoProcessor << " - "
+			<< std::endl;
 
 		//250 millisecond sleep delay 
 		Sleep( 100 );
